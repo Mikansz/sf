@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -18,9 +19,11 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nama',
         'email',
         'password',
+        'peran',
+        'status_aktif',
     ];
 
     /**
@@ -43,6 +46,27 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'status_aktif' => 'boolean',
         ];
+    }
+
+    public function karyawan(): HasOne
+    {
+        return $this->hasOne(Karyawan::class);
+    }
+
+    public function isCEO(): bool
+    {
+        return $this->peran === 'CEO';
+    }
+
+    public function isHRD(): bool
+    {
+        return $this->peran === 'HRD';
+    }
+
+    public function isKaryawan(): bool
+    {
+        return $this->peran === 'KARYAWAN';
     }
 }
